@@ -19,7 +19,7 @@ void FeedbackWindow() {
     const float scale = UI::GetScale();
 
     UI::SetNextWindowSize(300, 250);
-    if (UI::Begin(pluginTitle + " \\$FA3Feedback###warrior-medals-feedback", feedbackShown, UI::WindowFlags::AlwaysAutoResize)) {
+    if (UI::Begin(pluginTitle + " \\$FA3Feedback###participation-medals-feedback", feedbackShown, UI::WindowFlags::AlwaysAutoResize)) {
         UI::BeginDisabled(API::requesting);
 
         UI::AlignTextToFramePadding();

@@ -3,11 +3,11 @@
 
 #if DEPENDENCY_ULTIMATEMEDALSEXTENDED
 
-class UME_Warrior : UltimateMedalsExtended::IMedal {
+class UME_Participation : UltimateMedalsExtended::IMedal {
     UltimateMedalsExtended::Config GetConfig() override {
         UltimateMedalsExtended::Config c;
 
-        c.defaultName = "Warrior";
+        c.defaultName = "Participation";
         c.icon = pluginColor + Icons::Circle;
         c.iconOverlay = "\\$DB4" + Icons::CircleO;
 
@@ -22,7 +22,7 @@ class UME_Warrior : UltimateMedalsExtended::IMedal {
             return 0;
         }
 
-        return WarriorMedals::GetWMTime();
+        return ParticipationMedals::GetWMTime();
     }
 
     bool HasMedalTime(const string&in uid) override {
@@ -33,7 +33,7 @@ class UME_Warrior : UltimateMedalsExtended::IMedal {
             return false;
         }
 
-        return WarriorMedals::GetWMTime(uid) > 0;
+        return ParticipationMedals::GetWMTime(uid) > 0;
     }
 
     void UpdateMedal(const string&in uid) override { }

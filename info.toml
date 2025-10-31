@@ -1,6 +1,6 @@
 [meta]
-name = "Warrior Medals"
-author = "Ezio"
+name = "Participation Medals"
+author = "AdamJC20"
 category = "Race"
 version = "1.9.0"
 siteid = 590
@@ -8,6 +8,6 @@ siteid = 590
 [script]
 dependencies = [ "NadeoServices" ]
 optional_dependencies = [ "MLHook", "UltimateMedalsExtended" ]
-module = "WarriorMedals"
+module = "ParticipationMedals"
 exports = [ "src/Export.as" ]
 shared_exports = [ "src/ExportShared.as" ]

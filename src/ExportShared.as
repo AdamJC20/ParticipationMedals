@@ -2,9 +2,9 @@
 // m 2025-07-19
 
 /*
-Exports from the Warrior Medals plugin.
+Exports from the Participation Medals plugin.
 */
-namespace WarriorMedals {
+namespace ParticipationMedals {
     /*
     Enum describing the type a campaign is or the type of campaign a map is a part of.
     */
@@ -77,7 +77,7 @@ namespace WarriorMedals {
     }
 
     /*
-    Data container for a map with a Warrior medal.
+    Data container for a map with a Participation medal.
     */
     shared class Map {
         private bool gettingPB  = false;
@@ -123,10 +123,10 @@ namespace WarriorMedals {
         uint get_gold() { return _gold; }
         private void set_gold(const uint g) { _gold = g; }
 
-        bool get_hasWarrior() {
+        bool get_hasParticipation() {
             return true
                 and pb != uint(-1)
-                and pb <= warrior
+                and pb <= participation
             ;
         }
 
@@ -167,9 +167,9 @@ namespace WarriorMedals {
         string get_uid() { return _uid; }
         private void set_uid(const string&in u) { _uid = u; }
 
-        private uint _warrior;
-        uint get_warrior() { return _warrior; }
-        private void set_warrior(const uint w) { _warrior = w; }
+        private uint _participation;
+        uint get_participation() { return _participation; }
+        private void set_participation(const uint w) { _participation = w; }
 
         private int _week = -1;  // weekly only
         int get_week() { return _week; }
@@ -188,7 +188,7 @@ namespace WarriorMedals {
             nameFormatted = OpenplanetFormatCodes(name);
             nameStripped  = StripFormatCodes(name);
             uid           = string(map["mapUid"]);
-            warrior       = uint(map["warriorTime"]);
+            participation       = uint(map["participationTime"]);
             worldRecord   = uint(map["worldRecord"]);
 
             campaignType = CampaignType::Seasonal;
@@ -263,7 +263,7 @@ namespace WarriorMedals {
             nameFormatted = OpenplanetFormatCodes(name);
             nameStripped  = StripFormatCodes(name);
             uid           = string(map["mapUid"]);
-            warrior       = uint(map["warriorTime"]);
+            participation       = uint(map["participationTime"]);
             worldRecord   = uint(map["worldRecord"]);
 
             Json::Value@ reason = map["reason"];

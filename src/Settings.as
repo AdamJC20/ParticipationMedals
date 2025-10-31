@@ -201,7 +201,7 @@ void Settings_MedalsInUI() {
     }
 
     S_UIMedals = UI::Checkbox("Show medals in UI", S_UIMedals);
-    HoverTooltipSetting("Showing Warrior medal icons in the UI can be laggy, but it's a nice touch to see them more easily in a vanilla-looking way");
+    HoverTooltipSetting("Showing Participation medal icons in the UI can be laggy, but it's a nice touch to see them more easily in a vanilla-looking way");
 
     if (S_UIMedals) {
         UI::Separator();
@@ -359,7 +359,7 @@ void Settings_Debug() {
             UI::ListClipper clipper(uids.Length);
             while (clipper.Step()) {
                 for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
-                    auto map = cast<WarriorMedals::Map>(maps[uids[i]]);
+                    auto map = cast<ParticipationMedals::Map>(maps[uids[i]]);
 
                     UI::TableNextRow();
 
@@ -373,7 +373,7 @@ void Settings_Debug() {
                     UI::Text(Time::Format(map.worldRecord));
 
                     UI::TableNextColumn();
-                    UI::Text(Time::Format(map.warrior));
+                    UI::Text(Time::Format(map.participation));
 
                     UI::TableNextColumn();
                     UI::Text(Time::Format(map.author));
@@ -411,8 +411,8 @@ void Settings_Debug() {
     if (UI::BeginTabItem("Other")) {
         UI::Text("previous totd: " + (previousTotd !is null ? previousTotd.date : "null"));
         UI::Text("latest totd: " + (latestTotd !is null ? latestTotd.date : "null"));
-        string next = "next request: " + Time::FormatString("%F %T", nextWarriorRequest) + " (";
-        const int64 delta = nextWarriorRequest - Time::Stamp;
+        string next = "next request: " + Time::FormatString("%F %T", nextParticipationRequest) + " (";
+        const int64 delta = nextParticipationRequest - Time::Stamp;
         if (delta > 0) {
             next += "in " + Time::Format(delta * 1000, false);
         } else {
@@ -426,7 +426,7 @@ void Settings_Debug() {
     UI::EndTabBar();
 }
 
-[SettingsTab name="Warrior Medals" icon="Circle" order=3]
+[SettingsTab name="Participation Medals" icon="Circle" order=3]
 void Settings_MainWindow() {
     MainWindow();
 }

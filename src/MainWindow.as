@@ -3,10 +3,10 @@
 
 void MainWindow(const bool detached = false) {
     switch (selectedMedal) {
-        case Medal::Warrior:
-            UI::PushStyleColor(UI::Col::Button,        vec4(colorWarriorVec * 0.8f, 1.0f));
-            UI::PushStyleColor(UI::Col::ButtonActive,  vec4(colorWarriorVec * 0.6f, 1.0f));
-            UI::PushStyleColor(UI::Col::ButtonHovered, vec4(colorWarriorVec,        1.0f));
+        case Medal::Participation:
+            UI::PushStyleColor(UI::Col::Button,        vec4(colorParticipationVec * 0.8f, 1.0f));
+            UI::PushStyleColor(UI::Col::ButtonActive,  vec4(colorParticipationVec * 0.6f, 1.0f));
+            UI::PushStyleColor(UI::Col::ButtonHovered, vec4(colorParticipationVec,        1.0f));
             break;
     }
 
@@ -18,8 +18,8 @@ void MainWindow(const bool detached = false) {
 
         UI::TableNextColumn();
         switch (selectedMedal) {
-            case Medal::Warrior:
-                IconAndTotals(totalWarriorHave, total);
+            case Medal::Participation:
+                IconAndTotals(totalParticipationHave, total);
                 break;
         }
 
@@ -37,10 +37,10 @@ void MainWindow(const bool detached = false) {
 
         UI::PushStyleColor(UI::Col::Text, S_ColorButtonFont);
         if (UI::Button(Shadow() + Icons::Globe)) {
-            OpenBrowserURL("https://e416.dev/warrior-medals");
+            OpenBrowserURL("https://e416.dev/participation-medals");
         }
         UI::PopStyleColor();
-        HoverTooltip("Open the Warrior Medals website");
+        HoverTooltip("Open the Participation Medals website");
 
         UI::SameLine();
         UI::BeginDisabled(feedbackShown);
@@ -69,10 +69,10 @@ void MainWindow(const bool detached = false) {
     }
 
     switch (selectedMedal) {
-        case Medal::Warrior:
-            UI::PushStyleColor(UI::Col::Tab,        vec4(colorWarriorVec * 0.6f,  1.0f));
-            UI::PushStyleColor(UI::Col::TabActive,  vec4(colorWarriorVec * 0.85f, 1.0f));
-            UI::PushStyleColor(UI::Col::TabHovered, vec4(colorWarriorVec * 0.85f, 1.0f));
+        case Medal::Participation:
+            UI::PushStyleColor(UI::Col::Tab,        vec4(colorParticipationVec * 0.6f,  1.0f));
+            UI::PushStyleColor(UI::Col::TabActive,  vec4(colorParticipationVec * 0.85f, 1.0f));
+            UI::PushStyleColor(UI::Col::TabHovered, vec4(colorParticipationVec * 0.85f, 1.0f));
             break;
     }
 
@@ -144,19 +144,19 @@ bool Tab_SingleCampaign(Campaign@ campaign, const bool selected) {
             and campaign.clubName != "None"
         ) {
             UI::PushFont(UI::Font::Default, 16.0f);
-            HoverTooltip("from the club \"" + WarriorMedals::OpenplanetFormatCodes(campaign.clubName) + "\\$Z\"");
+            HoverTooltip("from the club \"" + ParticipationMedals::OpenplanetFormatCodes(campaign.clubName) + "\\$Z\"");
             UI::PopFont();
         }
 
         UI::TableNextColumn();
-        IconAndTotals(campaign.countWarrior, campaign.mapsArr.Length);
+        IconAndTotals(campaign.countParticipation, campaign.mapsArr.Length);
 
         UI::PopFont();
 
         UI::EndTable();
     }
 
-    const bool totd = campaign.type == WarriorMedals::CampaignType::TrackOfTheDay;
+    const bool totd = campaign.type == ParticipationMedals::CampaignType::TrackOfTheDay;
 
     if (false
         or S_MainWindowCampRefresh
@@ -204,11 +204,11 @@ bool Tab_SingleCampaign(Campaign@ campaign, const bool selected) {
                     } else {
                         string clubId;
                         switch (campaign.type) {
-                            case WarriorMedals::CampaignType::Seasonal:
+                            case ParticipationMedals::CampaignType::Seasonal:
                                 clubId = "seasonal";
                                 break;
 
-                            case WarriorMedals::CampaignType::Weekly:
+                            case ParticipationMedals::CampaignType::Weekly:
                                 clubId = "weekly";
                                 break;
 
@@ -249,8 +249,8 @@ bool Tab_SingleCampaign(Campaign@ campaign, const bool selected) {
         UI::TableSetupScrollFreeze(0, 1);
         UI::TableSetupColumn("Name",    UI::TableColumnFlags::WidthStretch);
         switch (selectedMedal) {
-            case Medal::Warrior:
-                UI::TableSetupColumn("Warrior", UI::TableColumnFlags::WidthFixed, scale * 75.0f);
+            case Medal::Participation:
+                UI::TableSetupColumn("Participation", UI::TableColumnFlags::WidthFixed, scale * 75.0f);
                 break;
         }
         UI::TableSetupColumn("PB",      UI::TableColumnFlags::WidthFixed, scale * 75.0f);
@@ -262,7 +262,7 @@ bool Tab_SingleCampaign(Campaign@ campaign, const bool selected) {
         UI::TableHeadersRow();
 
         for (uint i = 0; i < campaign.mapsArr.Length; i++) {
-            WarriorMedals::Map@ map = campaign.mapsArr[i];
+            ParticipationMedals::Map@ map = campaign.mapsArr[i];
             if (map is null) {
                 continue;
             }
@@ -272,7 +272,7 @@ bool Tab_SingleCampaign(Campaign@ campaign, const bool selected) {
             UI::TableNextColumn();
             UI::AlignTextToFramePadding();
             UI::Text(Shadow() + map.nameStripped);
-            if (map.campaignType == WarriorMedals::CampaignType::TrackOfTheDay) {
+            if (map.campaignType == ParticipationMedals::CampaignType::TrackOfTheDay) {
                 HoverTooltip(map.date);
             }
             if (map.reason.Length > 0) {
@@ -283,17 +283,17 @@ bool Tab_SingleCampaign(Campaign@ campaign, const bool selected) {
             }
 
             UI::TableNextColumn();
-            UI::Text(Shadow() + Time::Format(map.warrior));
+            UI::Text(Shadow() + Time::Format(map.participation));
 
             UI::TableNextColumn();
             UI::Text(Shadow() + (map.pb != uint(-1) ? Time::Format(map.pb) : ""));
 
             UI::TableNextColumn();
             switch (selectedMedal) {
-                case Medal::Warrior:
+                case Medal::Participation:
                     UI::Text(
-                        Shadow() + (map.pb != uint(-1) ? (map.pb <= map.warrior ? "\\$77F\u2212" : "\\$F77+")
-                        + Time::Format(uint(Math::Abs(map.pb - map.warrior))) : "")
+                        Shadow() + (map.pb != uint(-1) ? (map.pb <= map.participation ? "\\$77F\u2212" : "\\$F77+")
+                        + Time::Format(uint(Math::Abs(map.pb - map.participation))) : "")
                     );
                     break;
             }
@@ -338,7 +338,7 @@ void Tab_Other(const bool detached = false) {
     const float scale = UI::GetScale();
     int selected = -2;
 
-    TypeTotals(WarriorMedals::CampaignType::Other);
+    TypeTotals(ParticipationMedals::CampaignType::Other);
 
     UI::BeginTabBar("##tab-bar-totd");
 
@@ -362,7 +362,7 @@ void Tab_Other(const bool detached = false) {
             Campaign@ campaign = campaignsArr[i];
             if (false
                 or campaign is null
-                or campaign.type != WarriorMedals::CampaignType::Other
+                or campaign.type != ParticipationMedals::CampaignType::Other
             ) {
                 continue;
             }
@@ -389,8 +389,8 @@ void Tab_Other(const bool detached = false) {
             }
             UI::PopStyleColor();
             switch (selectedMedal) {
-                case Medal::Warrior:
-                    UI::SetItemTooltip(tostring(campaign.countWarrior) + " / " + campaign.mapsArr.Length);
+                case Medal::Participation:
+                    UI::SetItemTooltip(tostring(campaign.countParticipation) + " / " + campaign.mapsArr.Length);
                     break;
             }
         }
@@ -400,7 +400,7 @@ void Tab_Other(const bool detached = false) {
             const string clubName = clubs[i];
 
             UI::PushFont(UI::Font::Default, 26.0f);
-            UI::SeparatorText(Shadow() + WarriorMedals::StripFormatCodes(clubName));
+            UI::SeparatorText(Shadow() + ParticipationMedals::StripFormatCodes(clubName));
             UI::PopFont();
 
             index = 0;
@@ -426,8 +426,8 @@ void Tab_Other(const bool detached = false) {
                 }
                 UI::PopStyleColor();
                 switch (selectedMedal) {
-                    case Medal::Warrior:
-                        UI::SetItemTooltip(tostring(campaign.countWarrior) + " / " + campaign.mapsArr.Length);
+                    case Medal::Participation:
+                        UI::SetItemTooltip(tostring(campaign.countParticipation) + " / " + campaign.mapsArr.Length);
                         break;
                 }
             }
@@ -460,7 +460,7 @@ void Tab_Seasonal(const bool detached = false) {
     const float scale = UI::GetScale();
     int selected = -2;
 
-    TypeTotals(WarriorMedals::CampaignType::Seasonal);
+    TypeTotals(ParticipationMedals::CampaignType::Seasonal);
 
     UI::BeginTabBar("##tab-bar-seasonal");
 
@@ -476,7 +476,7 @@ void Tab_Seasonal(const bool detached = false) {
             Campaign@ campaign = arr[i];
             if (false
                 or campaign is null
-                or campaign.type != WarriorMedals::CampaignType::Seasonal
+                or campaign.type != ParticipationMedals::CampaignType::Seasonal
             ) {
                 continue;
             }
@@ -513,8 +513,8 @@ void Tab_Seasonal(const bool detached = false) {
             }
             UI::PopStyleColor();
             switch (selectedMedal) {
-                case Medal::Warrior:
-                    UI::SetItemTooltip(tostring(campaign.countWarrior) + " / " + campaign.mapsArr.Length);
+                case Medal::Participation:
+                    UI::SetItemTooltip(tostring(campaign.countParticipation) + " / " + campaign.mapsArr.Length);
                     break;
             }
 
@@ -550,7 +550,7 @@ void Tab_Totd(const bool detached = false) {
     const float scale = UI::GetScale();
     int selected = -2;
 
-    TypeTotals(WarriorMedals::CampaignType::TrackOfTheDay);
+    TypeTotals(ParticipationMedals::CampaignType::TrackOfTheDay);
 
     UI::BeginTabBar("##tab-bar-totd");
 
@@ -567,7 +567,7 @@ void Tab_Totd(const bool detached = false) {
             Campaign@ campaign = arr[i];
             if (false
                 or campaign is null
-                or campaign.type != WarriorMedals::CampaignType::TrackOfTheDay
+                or campaign.type != ParticipationMedals::CampaignType::TrackOfTheDay
             ) {
                 continue;
             }
@@ -605,8 +605,8 @@ void Tab_Totd(const bool detached = false) {
             }
             UI::PopStyleColor();
             switch (selectedMedal) {
-                case Medal::Warrior:
-                    UI::SetItemTooltip(tostring(campaign.countWarrior) + " / " + campaign.mapsArr.Length);
+                case Medal::Participation:
+                    UI::SetItemTooltip(tostring(campaign.countParticipation) + " / " + campaign.mapsArr.Length);
                     break;
             }
 
@@ -644,7 +644,7 @@ void Tab_Weekly(const bool detached = false) {
     const float scale = UI::GetScale();
     int selected = -2;
 
-    TypeTotals(WarriorMedals::CampaignType::Weekly);
+    TypeTotals(ParticipationMedals::CampaignType::Weekly);
 
     UI::BeginTabBar("##tab-bar-weekly");
 
@@ -661,7 +661,7 @@ void Tab_Weekly(const bool detached = false) {
             Campaign@ campaign = arr[i];
             if (false
                 or campaign is null
-                or campaign.type != WarriorMedals::CampaignType::Weekly
+                or campaign.type != ParticipationMedals::CampaignType::Weekly
             ) {
                 continue;
             }
@@ -701,8 +701,8 @@ void Tab_Weekly(const bool detached = false) {
             }
             UI::PopStyleColor();
             switch (selectedMedal) {
-                case Medal::Warrior:
-                    UI::SetItemTooltip(tostring(campaign.countWarrior) + " / " + campaign.mapsArr.Length);
+                case Medal::Participation:
+                    UI::SetItemTooltip(tostring(campaign.countParticipation) + " / " + campaign.mapsArr.Length);
                     break;
             }
 
@@ -732,44 +732,44 @@ void Tab_Weekly(const bool detached = false) {
     UI::EndTabItem();
 }
 
-void TypeTotals(const WarriorMedals::CampaignType type) {
+void TypeTotals(const ParticipationMedals::CampaignType type) {
     if (S_MainWindowTypeTotals) {
         uint total = 0;
         uint totalHave = 0;
 
         switch (type) {
-            case WarriorMedals::CampaignType::Other:
+            case ParticipationMedals::CampaignType::Other:
                 switch (selectedMedal) {
-                    case Medal::Warrior:
-                        total = totalWarriorOther;
-                        totalHave = totalWarriorOtherHave;
+                    case Medal::Participation:
+                        total = totalParticipationOther;
+                        totalHave = totalParticipationOtherHave;
                         break;
                 }
                 break;
 
-            case WarriorMedals::CampaignType::Seasonal:
+            case ParticipationMedals::CampaignType::Seasonal:
                 switch (selectedMedal) {
-                    case Medal::Warrior:
-                        total = totalWarriorSeasonal;
-                        totalHave = totalWarriorSeasonalHave;
+                    case Medal::Participation:
+                        total = totalParticipationSeasonal;
+                        totalHave = totalParticipationSeasonalHave;
                         break;
                 }
                 break;
 
-            case WarriorMedals::CampaignType::TrackOfTheDay:
+            case ParticipationMedals::CampaignType::TrackOfTheDay:
                 switch (selectedMedal) {
-                    case Medal::Warrior:
-                        total = totalWarriorTotd;
-                        totalHave = totalWarriorTotdHave;
+                    case Medal::Participation:
+                        total = totalParticipationTotd;
+                        totalHave = totalParticipationTotdHave;
                         break;
                 }
                 break;
 
-            case WarriorMedals::CampaignType::Weekly:
+            case ParticipationMedals::CampaignType::Weekly:
                 switch (selectedMedal) {
-                    case Medal::Warrior:
-                        total = totalWarriorWeekly;
-                        totalHave = totalWarriorWeeklyHave;
+                    case Medal::Participation:
+                        total = totalParticipationWeekly;
+                        totalHave = totalParticipationWeeklyHave;
                         break;
                 }
                 break;
@@ -781,8 +781,8 @@ void TypeTotals(const WarriorMedals::CampaignType type) {
 
 void IconAndTotals(const uint totalHave, const uint total) {
     switch (selectedMedal) {
-        case Medal::Warrior:
-            UI::Image(iconWarrior32, vec2(UI::GetScale() * 32.0f));
+        case Medal::Participation:
+            UI::Image(iconParticipation32, vec2(UI::GetScale() * 32.0f));
             break;
     }
 
@@ -797,8 +797,8 @@ void IconAndTotals(const uint totalHave, const uint total) {
 
     if (colorText) {
         switch (selectedMedal) {
-            case Medal::Warrior:
-                UI::PushStyleColor(UI::Col::Text, vec4(colorWarriorVec, 1.0f));
+            case Medal::Participation:
+                UI::PushStyleColor(UI::Col::Text, vec4(colorParticipationVec, 1.0f));
                 break;
         }
     }
@@ -811,8 +811,8 @@ void IconAndTotals(const uint totalHave, const uint total) {
         UI::SameLine();
         if (colorText) {
             switch (selectedMedal) {
-                case Medal::Warrior:
-                    UI::PushStyleColor(UI::Col::Text, vec4(colorWarriorVec, 0.4f));
+                case Medal::Participation:
+                    UI::PushStyleColor(UI::Col::Text, vec4(colorParticipationVec, 0.4f));
                     break;
             }
         } else {

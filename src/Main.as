@@ -9,39 +9,39 @@ Json::Value@        campaignIndices;
 dictionary          campaigns;
 Campaign@[]         campaignsArr;
 Campaign@[]         campaignsArrRev;
-const vec3          colorWarriorVec          = vec3(0.18f, 0.58f, 0.8f);
+const vec3          colorParticipationVec          = vec3(0.18f, 0.58f, 0.8f);
 const bool          hasPlayPermission        = Permissions::PlayLocalMap();
-UI::Texture@        iconWarrior32;
-UI::Texture@        iconWarrior512;
-nvg::Texture@       iconWarriorNvg;
-WarriorMedals::Map@ latestTotd;
+UI::Texture@        iconParticipation32;
+UI::Texture@        iconParticipation512;
+nvg::Texture@       iconParticipationNvg;
+ParticipationMedals::Map@ latestTotd;
 bool                loading                  = false;
 dictionary          maps;
 dictionary          mapsById;
-int64               nextWarriorRequest       = 0;
+int64               nextParticipationRequest       = 0;
 const string        pluginColor              = "\\$38C";
 const string        pluginIcon               = Icons::Circle;
 Meta::Plugin@       pluginMeta               = Meta::ExecutingPlugin();
 const string        pluginTitle              = pluginColor + pluginIcon + "\\$G " + pluginMeta.Name;
-WarriorMedals::Map@ previousTotd;
+ParticipationMedals::Map@ previousTotd;
 const string        reqAgentStart            = "Openplanet / Net::HttpRequest / " + pluginMeta.ID + " " + pluginMeta.Version;
 vec3[]              seasonColors;
-Medal               selectedMedal            = Medal::Warrior;
+Medal               selectedMedal            = Medal::Participation;
 bool                settingTotals            = false;
 uint                total                    = 0;
-uint                totalWarriorHave         = 0;
-uint                totalWarriorOther        = 0;
-uint                totalWarriorOtherHave    = 0;
-uint                totalWarriorSeasonal     = 0;
-uint                totalWarriorSeasonalHave = 0;
-uint                totalWarriorTotd         = 0;
-uint                totalWarriorTotdHave     = 0;
-uint                totalWarriorWeekly       = 0;
-uint                totalWarriorWeeklyHave   = 0;
-const string        uidSeparator             = "|warrior-campaign|";
+uint                totalParticipationHave         = 0;
+uint                totalParticipationOther        = 0;
+uint                totalParticipationOtherHave    = 0;
+uint                totalParticipationSeasonal     = 0;
+uint                totalParticipationSeasonalHave = 0;
+uint                totalParticipationTotd         = 0;
+uint                totalParticipationTotdHave     = 0;
+uint                totalParticipationWeekly       = 0;
+uint                totalParticipationWeeklyHave   = 0;
+const string        uidSeparator             = "|participation-campaign|";
 
 enum Medal {
-    Warrior
+    Participation
 }
 
 void Main() {
@@ -49,12 +49,12 @@ void Main() {
 
     OnSettingsChanged();
     startnew(API::GetAllMapInfosAsync);
-    WarriorMedals::GetIcon32();
+    ParticipationMedals::GetIcon32();
 
     yield();
 
-    IO::FileSource file("assets/warrior_512.png");
-    @iconWarriorNvg = nvg::LoadTexture(file.Read(file.Size()));
+    IO::FileSource file("assets/participation_512.png");
+    @iconParticipationNvg = nvg::LoadTexture(file.Read(file.Size()));
 
     yield();
 
@@ -63,7 +63,7 @@ void Main() {
 
 #if DEPENDENCY_ULTIMATEMEDALSEXTENDED
     trace("registering UME medal");
-    UltimateMedalsExtended::AddMedal(UME_Warrior());
+    UltimateMedalsExtended::AddMedal(UME_Participation());
 #endif
 
     bool inMap = InMap();
@@ -86,7 +86,7 @@ void Main() {
 
 void OnDestroyed() {
 #if DEPENDENCY_ULTIMATEMEDALSEXTENDED
-    UltimateMedalsExtended::RemoveMedal("Warrior");
+    UltimateMedalsExtended::RemoveMedal("Participation");
 #endif
 }
 
@@ -100,7 +100,7 @@ void OnSettingsChanged() {
 }
 
 void Render() {
-    if (iconWarrior32 is null) {
+    if (iconParticipation32 is null) {
         return;
     }
 
@@ -141,7 +141,7 @@ void PBLoop() {
             continue;
         }
 
-        auto map = cast<WarriorMedals::Map>(maps[App.RootMap.EdChallengeId]);
+        auto map = cast<ParticipationMedals::Map>(maps[App.RootMap.EdChallengeId]);
         if (map !is null) {
             const uint prevPb = map.pb;
 
@@ -165,41 +165,41 @@ void SetTotals() {
     trace("setting totals");
 
     total = maps.GetKeys().Length;
-    totalWarriorHave         = 0;
-    totalWarriorOther        = 0;
-    totalWarriorOtherHave    = 0;
-    totalWarriorSeasonal     = 0;
-    totalWarriorSeasonalHave = 0;
-    totalWarriorTotd         = 0;
-    totalWarriorTotdHave     = 0;
-    totalWarriorWeekly       = 0;
-    totalWarriorWeeklyHave   = 0;
+    totalParticipationHave         = 0;
+    totalParticipationOther        = 0;
+    totalParticipationOtherHave    = 0;
+    totalParticipationSeasonal     = 0;
+    totalParticipationSeasonalHave = 0;
+    totalParticipationTotd         = 0;
+    totalParticipationTotdHave     = 0;
+    totalParticipationWeekly       = 0;
+    totalParticipationWeeklyHave   = 0;
 
     for (uint i = 0; i < campaignsArr.Length; i++) {
         Campaign@ campaign = campaignsArr[i];
         if (campaign !is null) {
-            const uint countWarrior = campaign.countWarrior;
-            totalWarriorHave += countWarrior;
+            const uint countParticipation = campaign.countParticipation;
+            totalParticipationHave += countParticipation;
 
             switch (campaign.type) {
-                case WarriorMedals::CampaignType::Other:
-                    totalWarriorOther += campaign.mapsArr.Length;
-                    totalWarriorOtherHave += countWarrior;
+                case ParticipationMedals::CampaignType::Other:
+                    totalParticipationOther += campaign.mapsArr.Length;
+                    totalParticipationOtherHave += countParticipation;
                     break;
 
-                case WarriorMedals::CampaignType::Seasonal:
-                    totalWarriorSeasonal += campaign.mapsArr.Length;
-                    totalWarriorSeasonalHave += countWarrior;
+                case ParticipationMedals::CampaignType::Seasonal:
+                    totalParticipationSeasonal += campaign.mapsArr.Length;
+                    totalParticipationSeasonalHave += countParticipation;
                     break;
 
-                case WarriorMedals::CampaignType::TrackOfTheDay:
-                    totalWarriorTotd += campaign.mapsArr.Length;
-                    totalWarriorTotdHave += countWarrior;
+                case ParticipationMedals::CampaignType::TrackOfTheDay:
+                    totalParticipationTotd += campaign.mapsArr.Length;
+                    totalParticipationTotdHave += countParticipation;
                     break;
 
-                case WarriorMedals::CampaignType::Weekly:
-                    totalWarriorWeekly += campaign.mapsArr.Length;
-                    totalWarriorWeeklyHave += countWarrior;
+                case ParticipationMedals::CampaignType::Weekly:
+                    totalParticipationWeekly += campaign.mapsArr.Length;
+                    totalParticipationWeeklyHave += countParticipation;
                     break;
             }
         }
@@ -214,8 +214,8 @@ void WaitForNextRequestAsync() {
         sleep(1000);
 
         if (true
-            and nextWarriorRequest > 0
-            and Time::Stamp - nextWarriorRequest > 0
+            and nextParticipationRequest > 0
+            and Time::Stamp - nextParticipationRequest > 0
         ) {
             trace("passed next request time, waiting to actually request...");
             sleep(300000);

@@ -22,7 +22,7 @@ void MedalWindow() {
         return;
     }
 
-    auto map = cast<WarriorMedals::Map>(maps[uid]);
+    auto map = cast<ParticipationMedals::Map>(maps[uid]);
     if (map is null) {
         return;
     }
@@ -34,7 +34,7 @@ void MedalWindow() {
         flags |= UI::WindowFlags::NoMove;
     }
 
-    if (UI::Begin(pluginTitle + "###warrior-medal", S_MedalWindow, flags)) {
+    if (UI::Begin(pluginTitle + "###participation-medal", S_MedalWindow, flags)) {
         const bool delta = true
             and S_MedalWindowDelta
             and map.pb != uint(-1)
@@ -53,22 +53,22 @@ void MedalWindow() {
 
             UI::TableNextColumn();
             if (S_MedalWindowIcon) {
-                UI::Image(iconWarrior32, vec2(scale * 16.0f));
+                UI::Image(iconParticipation32, vec2(scale * 16.0f));
             } else {
                 UI::Text(pluginColor + Icons::Circle);
             }
 
             if (S_MedalWindowName) {
                 UI::TableNextColumn();
-                UI::Text("Warrior");
+                UI::Text("Participation");
             }
 
             UI::TableNextColumn();
-            UI::Text(Time::Format(map.warrior));
+            UI::Text(Time::Format(map.participation));
 
             if (delta) {
                 UI::TableNextColumn();
-                UI::Text((map.pb <= map.warrior ? "\\$77F\u2212" : "\\$F77+") + Time::Format(uint(Math::Abs(map.pb - map.warrior))));
+                UI::Text((map.pb <= map.participation ? "\\$77F\u2212" : "\\$F77+") + Time::Format(uint(Math::Abs(map.pb - map.participation))));
             }
 
             UI::EndTable();

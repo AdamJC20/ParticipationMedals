@@ -10,25 +10,25 @@ class Campaign {
     int                         id         = -1;
     int                         index      = -1;
     dictionary                  maps;
-    WarriorMedals::Map@[]       mapsArr;
+    ParticipationMedals::Map@[]       mapsArr;
     uint                        month;
     string                      name;
     string                      nameFormatted;
     string                      nameStripped;
     bool                        requesting = false;
-    WarriorMedals::CampaignType type       = WarriorMedals::CampaignType::Unknown;
+    ParticipationMedals::CampaignType type       = ParticipationMedals::CampaignType::Unknown;
     string                      uid;
     uint                        week;
     uint                        year;
 
-    uint get_countWarrior() {
+    uint get_countParticipation() {
         uint _count = 0;
 
         for (uint i = 0; i < mapsArr.Length; i++) {
-            WarriorMedals::Map@ map = mapsArr[i];
+            ParticipationMedals::Map@ map = mapsArr[i];
             if (false
                 or map is null
-                or !map.hasWarrior
+                or !map.hasParticipation
             ) {
                 continue;
             }
@@ -46,19 +46,19 @@ class Campaign {
         ;  // 0 training/seasonal, 150 ubisoft nadeo
     }
 
-    Campaign(WarriorMedals::Map@ map) {
+    Campaign(ParticipationMedals::Map@ map) {
         clubId            = map.clubId;
         clubName          = map.clubName;
-        clubNameFormatted = WarriorMedals::OpenplanetFormatCodes(clubName);
-        clubNameStripped  = WarriorMedals::StripFormatCodes(clubName);
+        clubNameFormatted = ParticipationMedals::OpenplanetFormatCodes(clubName);
+        clubNameStripped  = ParticipationMedals::StripFormatCodes(clubName);
         id                = map.campaignId;
         name              = map.campaignName;
-        nameFormatted     = WarriorMedals::OpenplanetFormatCodes(name);
-        nameStripped      = WarriorMedals::StripFormatCodes(name);
+        nameFormatted     = ParticipationMedals::OpenplanetFormatCodes(name);
+        nameStripped      = ParticipationMedals::StripFormatCodes(name);
         uid               = CampaignUid(name, clubName);
     }
 
-    void AddMap(WarriorMedals::Map@ map) {
+    void AddMap(ParticipationMedals::Map@ map) {
         if (false
             or map is null
             or maps.Exists(map.uid)
@@ -69,7 +69,7 @@ class Campaign {
         maps[map.uid] = @map;
         mapsArr.InsertLast(@map);
 
-        if (type == WarriorMedals::CampaignType::Unknown) {
+        if (type == ParticipationMedals::CampaignType::Unknown) {
             type = map.campaignType;
         }
 
@@ -80,7 +80,7 @@ class Campaign {
         year = Text::ParseUInt(map.campaignName.SubStr(map.campaignName.Length - 4)) - 2020;
 
         switch (type) {
-            case WarriorMedals::CampaignType::Seasonal:
+            case ParticipationMedals::CampaignType::Seasonal:
                 if (map.campaignName.StartsWith("Summer")) {
                     index = 0 + 4 * year;
                     colorIndex = 2;
@@ -97,13 +97,13 @@ class Campaign {
 
                 break;
 
-            case WarriorMedals::CampaignType::Weekly:
+            case ParticipationMedals::CampaignType::Weekly:
                 index = map.number - 1;
                 week = map.week;
                 year = 4 + ((week + 48) / 52);  // breaks at week 212 (end of 2028)
                 break;
 
-            case WarriorMedals::CampaignType::TrackOfTheDay: {
+            case ParticipationMedals::CampaignType::TrackOfTheDay: {
                 month = Text::ParseUInt(map.date.SubStr(5, 2));
 
                 index = ((month + 5) % 12) + 12 * (year - (month < 7 ? 1 : 0));
@@ -130,12 +130,12 @@ class Campaign {
         }
     }
 
-    WarriorMedals::Map@ GetMap(const string&in uid) {
+    ParticipationMedals::Map@ GetMap(const string&in uid) {
         if (!maps.Exists(uid)) {
             return null;
         }
 
-        return cast<WarriorMedals::Map>(maps[uid]);
+        return cast<ParticipationMedals::Map>(maps[uid]);
     }
 
     void GetPBsAsync() {
@@ -169,7 +169,7 @@ class Campaign {
         }
 
         Json::Value@ data = req.Json();
-        if (!WarriorMedals::CheckJsonType(data, Json::Type::Array, "data")) {
+        if (!ParticipationMedals::CheckJsonType(data, Json::Type::Array, "data")) {
             error("getting PBs for " + nameStripped + " failed after " + (Time::Now - start) + "ms");
             return;
         }
@@ -178,13 +178,13 @@ class Campaign {
 
         for (uint i = 0; i < data.Length; i++) {
             Json::Value@ map_api = data[i];
-            if (!WarriorMedals::CheckJsonType(map_api, Json::Type::Object, "map_api")) {
+            if (!ParticipationMedals::CheckJsonType(map_api, Json::Type::Object, "map_api")) {
                 continue;
             }
 
             uid = JsonExt::GetString(map_api, "mapUid");
 
-            WarriorMedals::Map@ map = GetMap(uid);
+            ParticipationMedals::Map@ map = GetMap(uid);
             if (map !is null) {
                 map.SetPBFromAPI(map_api);
             }
@@ -219,7 +219,7 @@ void BuildCampaigns() {
     const string[]@ uids = maps.GetKeys();
 
     for (uint i = 0; i < uids.Length; i++) {
-        auto map = cast<WarriorMedals::Map>(maps[uids[i]]);
+        auto map = cast<ParticipationMedals::Map>(maps[uids[i]]);
         if (map is null) {
             continue;
         }
@@ -284,7 +284,7 @@ void SortCampaigns() {
         Campaign@ campaign = campaignsArr[i];
         if (false
             or campaign is null
-            or campaign.type != WarriorMedals::CampaignType::TrackOfTheDay
+            or campaign.type != ParticipationMedals::CampaignType::TrackOfTheDay
             or campaign.mapsArr.Length == 0
         ) {
             continue;
@@ -308,7 +308,7 @@ void SortCampaigns() {
             Campaign@ campaign = campaignsArr[i];
             if (false
                 or campaign is null
-                or campaign.type != WarriorMedals::CampaignType::TrackOfTheDay
+                or campaign.type != ParticipationMedals::CampaignType::TrackOfTheDay
                 or campaign.mapsArr.Length == 0
             ) {
                 continue;

@@ -2,58 +2,58 @@
 // m 2025-07-18
 
 /*
-Exports from the Warrior Medals plugin.
+Exports from the Participation Medals plugin.
 */
-namespace WarriorMedals {
+namespace ParticipationMedals {
     /*
-    Returns the Warrior medal color as a string.
+    Returns the Participation medal color as a string.
     */
-    string GetColorWarriorStr() {
+    string GetColorParticipationStr() {
         return pluginColor;
     }
 
     /*
-    Returns the Warrior medal color as a vec3.
+    Returns the Participation medal color as a vec3.
     */
-    vec3 GetColorWarriorVec() {
-        return colorWarriorVec;
+    vec3 GetColorParticipationVec() {
+        return colorParticipationVec;
     }
 
     /*
-    Returns the Warrior medal icon (32x32).
+    Returns the Participation medal icon (32x32).
     */
-    const UI::Texture@ GetIconWarrior32() {
-        if (iconWarrior32 is null) {
-            IO::FileSource file("assets/warrior_32.png");
-            @iconWarrior32 = UI::LoadTexture(file.Read(file.Size()));
+    const UI::Texture@ GetIconParticipation32() {
+        if (iconParticipation32 is null) {
+            IO::FileSource file("assets/participation_32.png");
+            @iconParticipation32 = UI::LoadTexture(file.Read(file.Size()));
         }
 
-        return iconWarrior32;
+        return iconParticipation32;
     }
 
     /*
-    Returns the Warrior medal icon (512x512).
+    Returns the Participation medal icon (512x512).
     */
-    const UI::Texture@ GetIconWarrior512() {
-        if (iconWarrior512 is null) {
-            IO::FileSource file("assets/warrior_512.png");
-            @iconWarrior512 = UI::LoadTexture(file.Read(file.Size()));
+    const UI::Texture@ GetIconParticipation512() {
+        if (iconParticipation512 is null) {
+            IO::FileSource file("assets/participation_512.png");
+            @iconParticipation512 = UI::LoadTexture(file.Read(file.Size()));
         }
 
-        return iconWarrior512;
+        return iconParticipation512;
     }
 
     /*
     Returns all cached map data.
-    Keys are map UIDs and values are of type WarriorMedals::Map@.
+    Keys are map UIDs and values are of type ParticipationMedals::Map@.
     */
     const dictionary@ GetMaps() {
         return maps;
     }
 
     /*
-    Gets the warrior medal time for the current map.
-    If there is an error or the map does not have a Warrior medal, returns 0.
+    Gets the participation medal time for the current map.
+    If there is an error or the map does not have a Participation medal, returns 0.
     This does not query the API for a time, so the plugin must already have it cached for this to return a time.
     Only use this if you need a synchronous function.
     */
@@ -62,7 +62,7 @@ namespace WarriorMedals {
             or pluginMeta is null
             or !pluginMeta.Enabled
         ) {
-            // warn("Warrior Medals is disabled");
+            // warn("Participation Medals is disabled");
             return 0;
         }
 
@@ -79,8 +79,8 @@ namespace WarriorMedals {
     }
 
     /*
-    Gets the warrior medal time for a given map UID.
-    If there is an error or the map does not have a Warrior medal, returns 0.
+    Gets the participation medal time for a given map UID.
+    If there is an error or the map does not have a Participation medal, returns 0.
     This does not query the API for a time, so the plugin must already have it cached for this to return a time.
     Only use this if you need a synchronous function.
     */
@@ -90,7 +90,7 @@ namespace WarriorMedals {
             or !pluginMeta.Enabled
             or GetApp().Editor !is null
         ) {
-            // warn("Warrior Medals is disabled");
+            // warn("Participation Medals is disabled");
             return 0;
         }
 
@@ -100,12 +100,12 @@ namespace WarriorMedals {
         }
 
         auto map = cast<Map>(maps[uid]);
-        return map !is null ? map.warrior : 0;
+        return map !is null ? map.participation : 0;
     }
 
     /*
-    Gets the warrior medal time for the current map.
-    If there is an error or the map does not have a Warrior medal, returns 0.
+    Gets the participation medal time for the current map.
+    If there is an error or the map does not have a Participation medal, returns 0.
     Queries the API for a medal time if the plugin does not have it cached.
     Use this instead of the synchronous version if possible.
     */
@@ -114,7 +114,7 @@ namespace WarriorMedals {
             or pluginMeta is null
             or !pluginMeta.Enabled
         ) {
-            // warn("Warrior Medals is disabled");
+            // warn("Participation Medals is disabled");
             return 0;
         }
 
@@ -131,8 +131,8 @@ namespace WarriorMedals {
     }
 
     /*
-    Gets the warrior medal time for a given map UID.
-    If there is an error or the map does not have a Warrior medal, returns 0.
+    Gets the participation medal time for a given map UID.
+    If there is an error or the map does not have a Participation medal, returns 0.
     Queries the API for a medal time if the plugin does not have it cached.
     Use this instead of the synchronous version if possible.
     */
@@ -142,7 +142,7 @@ namespace WarriorMedals {
             or !pluginMeta.Enabled
             or GetApp().Editor !is null
         ) {
-            // warn("Warrior Medals is disabled");
+            // warn("Participation Medals is disabled");
             return 0;
         }
 
@@ -155,40 +155,40 @@ namespace WarriorMedals {
         }
 
         auto map = cast<Map>(maps[uid]);
-        return map !is null ? map.warrior : 0;
+        return map !is null ? map.participation : 0;
     }
 
     // DEPRECATED EXPORTS /////////////////////////////////////////////////////////////////////////////////////////////
 
     /*
-    Returns the Warrior medal color as a string.
+    Returns the Participation medal color as a string.
     Deprecated.
     */
     string GetColorStr() {
-        return GetColorWarriorStr();
+        return GetColorParticipationStr();
     }
 
     /*
-    Returns the Warrior medal color as a vec3.
+    Returns the Participation medal color as a vec3.
     Deprecated.
     */
     vec3 GetColorVec() {
-        return GetColorWarriorVec();
+        return GetColorParticipationVec();
     }
 
     /*
-    Returns the Warrior medal icon (32x32).
+    Returns the Participation medal icon (32x32).
     Deprecated.
     */
     const UI::Texture@ GetIcon32() {
-        return GetIconWarrior32();
+        return GetIconParticipation32();
     }
 
     /*
-    Returns the Warrior medal icon (512x512).
+    Returns the Participation medal icon (512x512).
     Deprecated.
     */
     const UI::Texture@ GetIcon512() {
-        return GetIconWarrior512();
+        return GetIconParticipation512();
     }
 }

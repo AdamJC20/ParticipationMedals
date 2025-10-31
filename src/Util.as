@@ -27,7 +27,7 @@ void PlayMapAsync(ref@ m) {
         return;
     }
 
-    auto map = cast<WarriorMedals::Map>(m);
+    auto map = cast<ParticipationMedals::Map>(m);
     if (map is null) {
         warn("given map is null");
         return;

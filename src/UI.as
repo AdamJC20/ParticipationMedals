@@ -15,7 +15,7 @@ enum PlaygroundPageType {
 void DrawOverUI() {
     if (false
         or !S_UIMedals
-        or iconWarriorNvg is null
+        or iconParticipationNvg is null
         or (true
             and !S_UIMedalsSoloMenu
             and !S_UIMedalsSeasonalCampaign
@@ -107,10 +107,10 @@ void DrawOverUI() {
         }
 
         if (!S_UIMedalsAlwaysPlayground) {
-            auto map = cast<WarriorMedals::Map>(maps[App.RootMap.EdChallengeId]);
+            auto map = cast<ParticipationMedals::Map>(maps[App.RootMap.EdChallengeId]);
             if (false
                 or map is null
-                or !map.hasWarrior
+                or !map.hasParticipation
             ) {
                 return;
             }
@@ -425,13 +425,13 @@ void DrawCampaign(CGameManialinkFrame@ Maps, const string&in uid, const bool clu
 
     int8[] indicesToShow;
     for (uint i = 0; i < campaign.mapsArr.Length; i++) {
-        WarriorMedals::Map@ map = campaign.mapsArr[i];
+        ParticipationMedals::Map@ map = campaign.mapsArr[i];
         if (map is null) {
             continue;
         }
 
         if (false
-            or map.hasWarrior
+            or map.hasParticipation
             or S_UIMedalsAlwaysMenu
         ) {
             indicesToShow.InsertLast(map.index);
@@ -478,7 +478,7 @@ void DrawCampaign(CGameManialinkFrame@ Maps, const string&in uid, const bool clu
         const vec2 coords    = center + scale * (offset + rowOffset + colOffset);
 
         nvg::BeginPath();
-        nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconWarriorNvg, 1.0f));
+        nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconParticipationNvg, 1.0f));
         nvg::Fill();
     }
 }
@@ -500,13 +500,13 @@ void _DrawWeekly(CGameManialinkPage@ Page, const string&in campaignName) {
 
     int8[] indicesToShow;
     for (uint i = 0; i < campaign.mapsArr.Length; i++) {
-        WarriorMedals::Map@ map = campaign.mapsArr[i];
+        ParticipationMedals::Map@ map = campaign.mapsArr[i];
         if (map is null) {
             continue;
         }
 
         if (false
-            or map.hasWarrior
+            or map.hasParticipation
             or S_UIMedalsAlwaysMenu
         ) {
             indicesToShow.InsertLast(map.index);
@@ -554,7 +554,7 @@ void _DrawWeekly(CGameManialinkPage@ Page, const string&in campaignName) {
         const vec2 coords = center + offset + scale * MedalStack.AbsolutePosition_V3;
 
         nvg::BeginPath();
-        nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconWarriorNvg, 1.0f));
+        nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconParticipationNvg, 1.0f));
         nvg::Fill();
     }
 }
@@ -621,7 +621,7 @@ void DrawOverLiveTotdPage(CGameManialinkPage@ Page) {  // should shift the medal
         or Page is null
         or previousTotd is null
         or (true
-            and !previousTotd.hasWarrior
+            and !previousTotd.hasParticipation
             and !S_UIMedalsAlwaysMenu
         )
     ) {
@@ -690,7 +690,7 @@ void DrawOverLiveTotdPage(CGameManialinkPage@ Page) {  // should shift the medal
     const vec2  coords = center + offset + scale * MedalStack.AbsolutePosition_V3;
 
     nvg::BeginPath();
-    nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconWarriorNvg, 1.0f));
+    nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconParticipationNvg, 1.0f));
     nvg::Fill();
 }
 
@@ -801,7 +801,7 @@ void DrawOverPlaygroundPage(CGameManialinkPage@ Page, const PlaygroundPageType t
         )
     ) {
         nvg::BeginPath();
-        nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconWarriorNvg, 1.0f));
+        nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconParticipationNvg, 1.0f));
         nvg::Fill();
     }
 
@@ -827,7 +827,7 @@ void DrawOverPlaygroundPage(CGameManialinkPage@ Page, const PlaygroundPageType t
     const vec2 quadMedalSize   = vec2(45.0f * hUnit);
 
     nvg::BeginPath();
-    nvg::FillPaint(nvg::TexturePattern(quadMedalCoords, quadMedalSize, 0.0f, iconWarriorNvg, 1.0f));
+    nvg::FillPaint(nvg::TexturePattern(quadMedalCoords, quadMedalSize, 0.0f, iconParticipationNvg, 1.0f));
     nvg::Fill();
 }
 
@@ -849,7 +849,7 @@ void _DrawSoloMedal(CGameManialinkFrame@ MedalStack) {
     const vec2  coords = center + offset + scale * MedalStack.AbsolutePosition_V3;
 
     nvg::BeginPath();
-    nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconWarriorNvg, 1.0f));
+    nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconParticipationNvg, 1.0f));
     nvg::Fill();
 }
 
@@ -873,7 +873,7 @@ void _DrawSoloCampaign(CGameManialinkPage@ Page) {
     if (false
         or campaign is null
         or (true
-            and campaign.countWarrior < 25
+            and campaign.countParticipation < 25
             and !S_UIMedalsAlwaysMenu
         )
     ) {
@@ -914,7 +914,7 @@ void _DrawSoloTotd(CGameManialinkPage@ Page) {
     }
 
     if (true
-        and !latestTotd.hasWarrior
+        and !latestTotd.hasParticipation
         and !S_UIMedalsAlwaysMenu
     ) {
         return;
@@ -952,13 +952,13 @@ void DrawOverTotdPage(CGameManialinkPage@ Page) {
     Campaign@ campaign = GetCampaign(CampaignUid(monthName));
     if (campaign !is null) {
         for (uint i = 0; i < campaign.mapsArr.Length; i++) {
-            WarriorMedals::Map@ map = campaign.mapsArr[i];
+            ParticipationMedals::Map@ map = campaign.mapsArr[i];
             if (map is null) {
                 continue;
             }
 
             if (false
-                or map.hasWarrior
+                or map.hasParticipation
                 or S_UIMedalsAlwaysMenu
             ) {
                 indicesToShow.InsertLast(map.index);
@@ -1010,7 +1010,7 @@ void DrawOverTotdPage(CGameManialinkPage@ Page) {
         const vec2 coords    = center + scale * (offset + colOffset + rowOffset);
 
         nvg::BeginPath();
-        nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconWarriorNvg, 1.0f));
+        nvg::FillPaint(nvg::TexturePattern(coords, size, 0.0f, iconParticipationNvg, 1.0f));
         nvg::Fill();
     }
 }
