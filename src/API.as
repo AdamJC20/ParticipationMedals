@@ -62,7 +62,7 @@ namespace API {
             case 426: {
                 const string msg = "Please update through the Plugin Manager at the top. Your plugin version will soon be unsupported!";
                 warn(msg);
-                UI::ShowNotification(pluginTitle, msg, vec4(colorWarriorVec * 0.5f, 1.0f), 10000);
+                UI::ShowNotification(pluginTitle, msg, vec4(colorParticipationVec * 0.5f, 1.0f), 10000);
                 break;
             }
 
@@ -86,7 +86,7 @@ namespace API {
         }
 
         Json::Value@ data = req.Json();
-        if (!WarriorMedals::CheckJsonType(data, Json::Type::Object, "data")) {
+        if (!ParticipationMedals::CheckJsonType(data, Json::Type::Object, "data")) {
             error("getting all map infos failed after " + (Time::Now - start) + "ms");
             return;
         }
@@ -100,19 +100,19 @@ namespace API {
             Json::Value@ section = data.Get(types[i]);
 
             if (types[i] == "next") {  // future proofing, plan to change backend later
-                if (WarriorMedals::CheckJsonType(section, Json::Type::Number, "next")) {
-                    nextWarriorRequest = int64(section);
-                    trace("next request: " + Time::FormatString("%F %T", nextWarriorRequest));
+                if (ParticipationMedals::CheckJsonType(section, Json::Type::Number, "next")) {
+                    nextParticipationRequest = int64(section);
+                    trace("next request: " + Time::FormatString("%F %T", nextParticipationRequest));
                     gotNext = true;
                 }
             } else {
-                if (!WarriorMedals::CheckJsonType(section, Json::Type::Array, "section-" + i)) {
+                if (!ParticipationMedals::CheckJsonType(section, Json::Type::Array, "section-" + i)) {
                     error("getting all map infos failed after " + (Time::Now - start) + "ms");
                     return;
                 }
 
                 for (uint j = 0; j < section.Length; j++) {
-                    auto map = WarriorMedals::Map(section[j], types[i]);
+                    auto map = ParticipationMedals::Map(section[j], types[i]);
                     maps[map.uid] = @map;
                     mapsById[map.id] = @map;
                 }
@@ -125,8 +125,8 @@ namespace API {
             trace("didn't find next request time, getting now...");
 
             try {
-                nextWarriorRequest = int64(GetEdevAsync("/tm/warrior/next").Json()[0]);
-                trace("next request: " + Time::FormatString("%F %T", nextWarriorRequest));
+                nextParticipationRequest = int64(GetEdevAsync("/tm/warrior/next").Json()[0]);
+                trace("next request: " + Time::FormatString("%F %T", nextParticipationRequest));
             } catch {
                 error("getting next request time failed");
             }
@@ -152,7 +152,7 @@ namespace API {
 
         @campaignIndices = req.Json();
 
-        if (!WarriorMedals::CheckJsonType(campaignIndices, Json::Type::Object, "campaignIndices", false)) {
+        if (!ParticipationMedals::CheckJsonType(campaignIndices, Json::Type::Object, "campaignIndices", false)) {
             error("getting campaign indices failed after " + (Time::Now - start) + "ms");
             return false;
         }
@@ -219,10 +219,10 @@ namespace API {
 
         Json::Value@ mapInfo = req.Json();
         if (true
-            and WarriorMedals::CheckJsonType(mapInfo, Json::Type::Object, "mapInfo")
+            and ParticipationMedals::CheckJsonType(mapInfo, Json::Type::Object, "mapInfo")
             and mapInfo.GetKeys().Length > 0
         ) {
-            auto map = WarriorMedals::Map(mapInfo);
+            auto map = ParticipationMedals::Map(mapInfo);
             map.GetPB();
             maps[uid] = @map;
 
@@ -332,7 +332,7 @@ namespace API {
             Campaign@ campaign = campaignsArr[i];
             if (false
                 or campaign is null
-                or campaign.type != WarriorMedals::CampaignType::Other
+                or campaign.type != ParticipationMedals::CampaignType::Other
             ) {
                 continue;
             }
@@ -375,7 +375,7 @@ namespace API {
                 }
 
                 Json::Value@ data = req.Json();
-                if (!WarriorMedals::CheckJsonType(data, Json::Type::Array, "data")) {
+                if (!ParticipationMedals::CheckJsonType(data, Json::Type::Array, "data")) {
                     error("getting all PBs (offset " + offset + ") failed after " + (Time::Now - start) + "ms");
                     continue;
                 }
@@ -396,7 +396,7 @@ namespace API {
 
                         pbs[mapId] = time;
                         try {
-                            cast<WarriorMedals::Map>(mapsById[mapId]).pb = uint(time);
+                            cast<ParticipationMedals::Map>(mapsById[mapId]).pb = uint(time);
                         } catch { }
 
                     } catch {
